@@ -1,0 +1,16 @@
+{
+
+	"name": "aquastreamer-core",
+	"version": "1.0.0",
+	"description": "Core API for AquaStreamer",
+    "main": "server.js",
+    "private": true,
+    "dependencies": {
+        "express": "~4.0.0",
+        "mongoose": "~3.6.13",
+        "body-parser": "~1.0.1",
+        "mongodb": "~2.2",
+        "jwt-simple": "^0.2.0"
+    },
+    "author": "Bob Wansink"
+}
