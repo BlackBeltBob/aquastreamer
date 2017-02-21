@@ -1,6 +1,5 @@
 /*
 
-var User     = require('../models/user');
 
 // more routes for our API will happen here
 
@@ -49,12 +48,16 @@ router.route('/users/:user_id')
         });
     });
 */
+var User     = require('../models/user');
 
 var users = {
  
   getAll: function(req, res) {
-    var allusers = data; // Spoof a DB call
-    res.json(allusers);
+    User.find({}, function(err, userlist) {
+      if (err) res.send(err);
+
+      res.json(userlist);
+    });
   },
  
   getOne: function(req, res) {
@@ -64,16 +67,41 @@ var users = {
   },
  
   create: function(req, res) {
-    var newuser = req.body;
-    data.push(newuser); // Spoof a DB call
-    res.json(newuser);
+    // construct a new user.
+    var newuser = new User({
+      name: req.body.name,
+      username: req.body.username,
+      password: req.body.password,
+      role: ''
+    });
+    
+    // save it.
+    newuser.save(function(err) {
+      if (err) throw err;
+      res.json(true);
+    });
   },
  
   update: function(req, res) {
     var updateuser = req.body;
-    var id = req.params.id;
-    data[id] = updateuser // Spoof a DB call
-    res.json(updateuser);
+    // find the user:
+    var uid = req.params.id;
+    User.find({ id: uid }, function(err, user) {
+      if (!user) {
+        console.log("geen user met id: " + uid);
+        throw err;
+      }
+      var curruser = new User(user);
+      // update the properties of user
+      if (updateuser.name) curruser.name = updateuser.name;
+      if (updateuser.password) curruser.password = updateuser.password;
+      if (updateuser.username) curruser.username = updateuser.username;
+      // save the user.
+      curruser.save(function(err) {
+        if (err) throw err;
+        res.json(true);
+      });
+    });
   },
  
   delete: function(req, res) {
