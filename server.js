@@ -2,6 +2,8 @@
 // =============================================================================
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/aquastreamer'); // connect to our database
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
 
 // call the packages we need
 var express    = require('express');        // call express
@@ -33,6 +35,8 @@ app.all('/*', function(req, res, next) {
 // Any URL's that do not follow the below pattern should be avoided unless you 
 // are sure that authentication is not needed
 app.all('/api/v1/*', [require('./middlewares/validateRequest.js')]);
+app.all('/api/v1/user/*', [require('./middlewares/checkSuperPowers.js')]);
+app.all('/api/v1/users/*', [require('./middlewares/checkSuperPowers.js')]);
 
 app.use('/', require('./routes'));
 
@@ -46,7 +50,12 @@ app.use(function(req, res, next) {
 
 // Start the server
 app.set('port', process.env.PORT || 3000);
- 
-var server = app.listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + server.address().port);
+
+db.once('open', function() {
+  // we're connected to the database.
+  console.log('Connected to database via mongoose');
+  var server = app.listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + server.address().port);
+  });
 });
+ 

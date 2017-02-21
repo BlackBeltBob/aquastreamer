@@ -33,10 +33,10 @@ router.delete('/api/v1/product/:id', products.delete);
 // /api/v1/admin/users     (getAll, update, delete) (GET, POST, DELETE)
 // /api/v1/admin/users/1   (getOne) (GET)
 
-router.get('/api/v1/admin/users', user.getAll);
-router.get('/api/v1/admin/user/:id', user.getOne);
-router.post('/api/v1/admin/user/', user.create);
-router.put('/api/v1/admin/user/:id', user.update);
-router.delete('/api/v1/admin/user/:id', user.delete);
+router.get('/api/v1/users', user.getAll);
+router.get('/api/v1/user/:id', user.getOne);
+router.post('/api/v1/user/', user.create);
+router.put('/api/v1/user/:id', user.update);
+router.delete('/api/v1/user/:id', user.delete);
 
 module.exports = router;

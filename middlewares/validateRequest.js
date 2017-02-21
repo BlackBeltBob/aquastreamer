@@ -1,4 +1,5 @@
 var jwt = require('jwt-simple');
+// jwt creates a three part token separated by periods. First contains base64(hashing-alg-info). Second is base64(payload). third is base64(hashed(hashing-alg-info + . + payload) 
 var validateUser = require('../routes/auth').validateUser;
  
 module.exports = function(req, res, next) {
@@ -25,12 +26,12 @@ module.exports = function(req, res, next) {
         return;
       }
  
-      // Authorize the user to see if s/he can access our resources
- 
-      var dbUser = validateUser(decoded.user.name); // The key would be the logged in user's username
+      // Authorize the user to see if user can access our resources
+      var dbUser = validateUser(decoded.user.name);
       if (dbUser) {
+        // the token is correct and a user could be found with this name.
  
- 
+        // if the requested url contains 'admin' and I have role admin, or the url does not contain 'admin' but does contain /api/v1
         if ((req.url.indexOf('admin') >= 0 && dbUser.role == 'admin') || (req.url.indexOf('admin') < 0 && req.url.indexOf('/api/v1/') >= 0)) {
           next(); // To move to next middleware
         } else {
@@ -42,7 +43,7 @@ module.exports = function(req, res, next) {
           return;
         }
       } else {
-        // No user with this name exists, respond back with a 401
+        // username does not exist, respond back with a 401
         res.status(401);
         res.json({
           "status": 401,
@@ -55,7 +56,7 @@ module.exports = function(req, res, next) {
       res.status(500);
       res.json({
         "status": 500,
-        "message": "Oops something went wrong",
+        "message": "Internal Server Error",
         "error": err
       });
     }
@@ -63,7 +64,7 @@ module.exports = function(req, res, next) {
     res.status(401);
     res.json({
       "status": 401,
-      "message": "Invalid Token."
+      "message": "Invalid or missing Token."
     });
     return;
   }
