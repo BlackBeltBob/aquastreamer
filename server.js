@@ -1,9 +1,6 @@
 // BASE SETUP
 // =============================================================================
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/aquastreamer'); // connect to our database
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
 
 // call the packages we need
 var express    = require('express');        // call express
@@ -53,8 +50,11 @@ app.use(function(req, res, next) {
 
 
 
-
+// FIXME: emulate https://github.com/madhums/node-express-mongoose-demo/blob/master/server.js
 // Start the server if the database is connected.
+mongoose.connect('mongodb://localhost:27017/aquastreamer'); // connect to our database
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
 
   app.set('port', process.env.PORT || 3000);
