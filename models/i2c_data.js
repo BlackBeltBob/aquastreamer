@@ -1,16 +1,16 @@
 // TDA7439 Three-band digitally-controlled audio processor
-const bus               = "1";
+const i2c_bus               = "1";
 // address of TDA7439
-const addr                  = "0x44";
+const i2c_addr                  = "0x44";
 // Subaddresses used for selection of what to change
-const subaddr_input_selector    = "0x00";
-const subaddr_input_gain        = "0x01";
-const subaddr_input_volume      = "0x02";
-const subaddr_bass_gain         = "0x03";
-const subaddr_mid_gain          = "0x04";
-const subaddr_treble_gain       = "0x05";
-const subaddr_speaker_att_right = "0x06";
-const subaddr_speaker_att_left  = "0x07";
+const i2c_subaddr_input_selector    = "0x00";
+const i2c_subaddr_input_gain        = "0x01";
+const i2c_subaddr_input_volume      = "0x02";
+const i2c_subaddr_bass_gain         = "0x03";
+const i2c_subaddr_mid_gain          = "0x04";
+const i2c_subaddr_treble_gain       = "0x05";
+const i2c_subaddr_speaker_att_right = "0x06";
+const i2c_subaddr_speaker_att_left  = "0x07";
 
 // corresponding input lines for chip, subaddr 0
 const data_input_selector_in4   = 0;
@@ -66,6 +66,7 @@ const data_speaker_att_max       = 119;
 const data_speaker_att_MUTE       = 120;
 
 // running a process on the command line from nodejs requires 'child_process'
-//const exec = require('child_process').exec;
-//const child = exec('sudo i2cset -y 1 0x44 0x02 0');
-
+const exec = require('child_process').exec;
+const databyte = 49;
+const i2c_bytestring = i2c_bus + ' ' + i2c_addr + ' ' + i2c_subaddr_speaker_att_right + ' ' + databyte.toString(); // '1 0x44 0x06 49'
+const child = exec('sudo i2cset -y ' + i2c_bytestring);
