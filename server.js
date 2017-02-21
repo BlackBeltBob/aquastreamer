@@ -30,11 +30,15 @@ app.all('/*', function(req, res, next) {
   }
 });
 
+
+
 // Auth Middleware - This will check if the token is valid
 // Only the requests that start with /api/v1/* will be checked for the token.
 // Any URL's that do not follow the below pattern should be avoided unless you 
 // are sure that authentication is not needed
 app.all('/api/v1/*', [require('./middlewares/validateRequest.js')]);
+
+// being able to change the list of users requires super powers. Only the admin can do this.
 app.all('/api/v1/user/*', [require('./middlewares/checkSuperPowers.js')]);
 app.all('/api/v1/users/*', [require('./middlewares/checkSuperPowers.js')]);
 
@@ -48,10 +52,13 @@ app.use(function(req, res, next) {
 });
 
 
-// Start the server
-app.set('port', process.env.PORT || 3000);
 
+
+// Start the server if the database is connected.
 db.once('open', function() {
+
+  app.set('port', process.env.PORT || 3000);
+
   // we're connected to the database.
   console.log('Connected to database via mongoose');
   var server = app.listen(app.get('port'), function() {
