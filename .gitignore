@@ -14,3 +14,4 @@ node_modules/
 # Output of 'npm pack'
 *.tgz
 
+#Example: https://github.com/github/gitignore/blob/master/Node.gitignore
